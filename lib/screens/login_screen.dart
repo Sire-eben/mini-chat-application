@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/buttons.dart';
+import '../widgets/custom_textfield.dart';
 import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -32,75 +34,24 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 48.0,
             ),
-            TextField(
-              onChanged: (value) {
-                //Do something with the user input.
-              },
-              decoration: const InputDecoration(
-                hintText: 'Enter your email',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-              ),
+            const CustomTextField(hintText: 'Email',
+
             ),
             const SizedBox(
               height: 8.0,
             ),
-            TextField(
-              onChanged: (value) {
-                //Do something with the user input.
-              },
-              decoration: const InputDecoration(
-                hintText: 'Enter your password.',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-              ),
+            const CustomTextField(hintText: 'Password',
+
             ),
             const SizedBox(
               height: 24.0,
             ),
-            SizedBox(
-              height: 65,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22),
-                    )),
-                    backgroundColor:
-                    MaterialStateProperty.all(Colors.deepPurple)),
+            CustomButton(
+                color: Colors.deepPurple,
+                text: 'Log In',
                 onPressed: () {
-                  //Go to login screen.
-                  Navigator.pushNamed(context, ChatScreen.id);
-                },
-                child: const Text(
-                  'Log In', style: TextStyle(color: Colors.white),
-                ),
-              ),
+                  // Navigator.pushNamed(context, LoginScreen.id);
+                }
             ),
           ],
         ),

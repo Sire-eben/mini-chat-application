@@ -1,8 +1,14 @@
 import 'package:chat_app/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/buttons.dart';
+import '../widgets/custom_textfield.dart';
+
 class RegistrationScreen extends StatefulWidget {
   static String id = 'registration_screen';
+
+  const RegistrationScreen({Key? key}) : super(key: key);
+
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
@@ -28,73 +34,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             const SizedBox(
               height: 48.0,
             ),
-            TextField(
-              onChanged: (value) {
-                //Do something with the user input.
-              },
-              decoration: const InputDecoration(
-                hintText: 'Enter your email',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent, width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-              ),
+            const CustomTextField(
+              hintText: 'Email',
             ),
             const SizedBox(
               height: 8.0,
             ),
-            TextField(
-              onChanged: (value) {
-                //Do something with the user input.
-              },
-              decoration: const InputDecoration(
-                hintText: 'Enter your password',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent, width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-              ),
+            const CustomTextField(
+              hintText: 'Password',
             ),
             const SizedBox(
               height: 24.0,
             ),
-            SizedBox(
-              height: 65,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(22),
-                        side: const BorderSide(width: 2,color: Colors.deepPurple)
-                    )),
-                    backgroundColor:
-                    MaterialStateProperty.all(Colors.white)),
+            CustomButton(
+                color: Colors.deepPurple,
+                text: 'Sign up',
                 onPressed: () {
-                  //Go to login screen.
-                  Navigator.pushNamed(context, ChatScreen.id);
-                },
-                child: const Text(
-                  'Log In', style: TextStyle(color: Colors.deepPurple),
-                ),
-              ),
-            ),
+                  // Navigator.pushNamed(context, LoginScreen.id);
+                }),
           ],
         ),
       ),
