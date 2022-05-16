@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/buttons.dart';
-import '../widgets/custom_textfield.dart';
+import '../constants.dart';
 import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,25 +33,50 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 48.0,
             ),
-            const CustomTextField(hintText: 'Email',
-
+            TextField(
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.emailAddress,
+              onChanged: (value) {
+                //Do something with the user input.
+              },
+              decoration:
+              kTextInputDecoration.copyWith(hintText: "Enter your email"),
+              style: const TextStyle(color: Colors.black),
             ),
             const SizedBox(
               height: 8.0,
             ),
-            const CustomTextField(hintText: 'Password',
-
+            TextField(
+              keyboardType: TextInputType.text,
+              textAlign: TextAlign.center,
+              obscureText: true,
+              onChanged: (value) {
+                //Do something with the user input.
+              },
+              decoration: kTextInputDecoration.copyWith(
+                  hintText: "Enter your password"),
+              style: const TextStyle(color: Colors.black),
             ),
             const SizedBox(
               height: 24.0,
             ),
-            CustomButton(
-                color: Colors.deepPurple,
-                text: 'Log In',
-                onPressed: () {
-                  // Navigator.pushNamed(context, LoginScreen.id);
-                }
-            ),
+            SizedBox(
+              height: 65,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    )),
+                    backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+                onPressed: (){
+                  Navigator.pushNamed(context, ChatScreen.id);
+                },
+                child: const Text(
+                  "Log in",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
           ],
         ),
       ),

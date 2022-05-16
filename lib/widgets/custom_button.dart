@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   final Color color;
   final String text;
-  final Function onPressed;
+  final Function press;
 
   const CustomButton({
     Key? key,
     required this.color,
     required this.text,
-    required this.onPressed,
+    required this.press,
   }) : super(key: key);
 
   @override
@@ -22,10 +22,10 @@ class CustomButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             )),
             backgroundColor: MaterialStateProperty.all(color)),
-        onPressed: onPressed(),
+        onPressed: press(),
         child: Text(
           text,
-          style: const TextStyle(color: Colors.deepPurple),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

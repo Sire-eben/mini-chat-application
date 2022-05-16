@@ -1,7 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chat_app/screens/login_screen.dart';
 import 'package:chat_app/screens/registration_screen.dart';
-import 'package:chat_app/widgets/buttons.dart';
+import 'package:chat_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -23,7 +23,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     controller = AnimationController(
       vsync: this,
       upperBound: 1.0,
-      duration: const Duration(seconds: 20),
+      duration: const Duration(seconds: 5),
     );
 
     controller!.forward();
@@ -50,41 +50,76 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     tag: 'logo',
                     child: SizedBox(
                       child: Image.asset('images/logo.png'),
-                      height: 60.0,
+                      width: MediaQuery.of(context).size.width * .2,
                     ),
                   ),
-                  AnimatedTextKit(
-                    animatedTexts: [
-                      TypewriterAnimatedText(
-                        'Flash Chat',
-                        textStyle: const TextStyle(
-                          fontSize: 45.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      )
-                    ],
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .5,
+                    child: DefaultTextStyle(
+                      style: const TextStyle(
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      child: AnimatedTextKit(
+                        repeatForever: true,
+                        displayFullTextOnTap: true,
+                        animatedTexts: [
+                          TypewriterAnimatedText('Mini chat app'),
+                          TypewriterAnimatedText('Design by Sire Eben'),
+                          TypewriterAnimatedText('Talk to your loved ones'),
+                        ],
+                        onTap: () {
+                          print("Tap Event");
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),
               const SizedBox(
                 height: 48.0,
               ),
-              CustomButton(
-                  color: Colors.white,
-                  text: 'Log In',
+              SizedBox(
+                height: 65,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      )),
+                      backgroundColor: MaterialStateProperty.all(Colors.white)),
                   onPressed: () {
-                    // Navigator.pushNamed(context, LoginScreen.id);
-                  }),
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                  },
+                  child: Text(
+                    "Login",
+                    style: const TextStyle(color: Colors.deepPurple),
+                  ),
+                ),
+              ),
               const SizedBox(
                 height: 20,
               ),
-              CustomButton(
-                  color: Colors.white,
-                  text: 'Sign up',
+              SizedBox(
+                height: 65,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      )),
+                      backgroundColor: MaterialStateProperty.all(Colors.white)),
                   onPressed: () {
-                    // Navigator.pushNamed(context, LoginScreen.id);
-                  }),
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegistrationScreen()));
+                  },
+                  child: Text(
+                    "Sign up",
+                    style: const TextStyle(color: Colors.deepPurple),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

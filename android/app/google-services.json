@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "494594121421",
+    "project_id": "my-chat-app-ee70b",
+    "storage_bucket": "my-chat-app-ee70b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494594121421:android:8672b1f033782d900a1384",
+        "android_client_info": {
+          "package_name": "africa.breej.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494594121421-7o3mtg70tb7i90gfioobdepl7knjdohc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_Juig0bXu5ZbuSESUu2Q-UjG-BnXluP0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494594121421-7o3mtg70tb7i90gfioobdepl7knjdohc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
