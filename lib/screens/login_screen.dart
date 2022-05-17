@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -13,6 +14,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = FirebaseAuth.instance;
+  String? email;
+  String? password;
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,10 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
-                //Do something with the user input.
+                email = value;
               },
               decoration:
-              kTextInputDecoration.copyWith(hintText: "Enter your email"),
+                  kTextInputDecoration.copyWith(hintText: "Enter your email"),
               style: const TextStyle(color: Colors.black),
             ),
             const SizedBox(
@@ -51,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               obscureText: true,
               onChanged: (value) {
-                //Do something with the user input.
+                password = value;
               },
               decoration: kTextInputDecoration.copyWith(
                   hintText: "Enter your password"),
@@ -67,14 +73,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     )),
-                    backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
-                onPressed: (){
-                  Navigator.pushNamed(context, ChatScreen.id);
-                },
-                child: const Text(
-                  "Log in",
-                  style: TextStyle(color: Colors.white),
-                ),
+                    backgroundColor: isLoading
+                        ? MaterialStateProperty.all(
+                            Colors.deepPurple.withOpacity(0.3))
+                        : MaterialStateProperty.all(Colors.deepPurple)),
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        setState(() => isLoading = true);
+                        try {
+                          await _auth.signInWithEmailAndPassword(
+                              email: email!, password: password!);
+                          setState(() => isLoading = false);
+                          Navigator.pushNamed(context, ChatScreen.id);
+                        } catch (e) {
+                          setState(() => isLoading = false);
+                          print(e);
+                        }
+                      },
+                child: isLoading
+                    ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : const Text(
+                        "Log in",
+                        style: TextStyle(color: Colors.white),
+                      ),
               ),
             )
           ],
