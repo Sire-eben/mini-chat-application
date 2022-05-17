@@ -47,7 +47,24 @@ class _ChatScreenState extends State<ChatScreen> {
         title: const Text('⚡️Chat'),
         backgroundColor: kPrimaryColor,
       ),
-      drawer: const Drawer(),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            SizedBox(
+              height: screenSize.height * .25,
+              child: const UserAccountsDrawerHeader(
+
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://media-exp1.licdn.com/dms/image/D4D35AQHnxyrJUdEjqg/profile-framedphoto-shrink_400_400/0/'
+                        '1652252214154?e=1653433200&v=beta&t=UfgBq7I-zrq5IUgxI_UtPzBjaP_E1Bp1iudGCIR3ow0'),
+                  ),
+                  accountName: Text('Ebenezer Ajewole'),
+                  accountEmail: Text('ebenezer@gmail.com')),
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -89,9 +106,12 @@ class _ChatScreenState extends State<ChatScreen> {
                               snapshot.data!.docs[index].data()!
                                   as Map<String, dynamic>);
                           return ListTile(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)
-                              => MessagesScreen(model: model)));
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          MessagesScreen(model: model)));
                             },
                             contentPadding: const EdgeInsets.all(16),
                             leading: const CircleAvatar(

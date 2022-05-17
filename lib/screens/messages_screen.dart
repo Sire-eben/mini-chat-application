@@ -1,3 +1,4 @@
+import 'package:chat_app/models/messages.dart';
 import 'package:chat_app/models/user.dart';
 import 'package:chat_app/screens/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,98 +18,96 @@ class MessagesScreen extends StatefulWidget {
 
 class _MessagesScreenState extends State<MessagesScreen> {
   final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
+  TextEditingController messageController = TextEditingController();
   User? loggedInUser;
   bool isLoading = false;
-  String? message;
-
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
-
-  void getCurrentUser() async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        loggedInUser = user;
-        print(loggedInUser!.email);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  // void getMessages() async{
-  //   final messages = await _firestore.collection('messages').get();
-  //   for (var message in messages.docs){
-  //     print(message.data());
-  //   }
-  // }
-
-  void messagesStream() async {
-    await for (var snapshot in _firestore.collection('messages').snapshots()) {
-      for (var message in snapshot.docs) {
-        print(message.data());
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
+    Size screenSize = MediaQuery
+        .of(context)
+        .size;
 
     return Scaffold(
       appBar: AppBar(
-        leading: null,
         actions: <Widget>[
-          IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () async {
-                setState(() {});
-                await _auth.signOut();
-                Navigator.pop(context);
-                // Navigator.pushAndRemoveUntil(
-                //     context,
-                //     MaterialPageRoute(builder: (context) => WelcomeScreen()), (
-                //     route) => false);
-              }),
+          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
         ],
-        title: const Text('⚡️Chat'),
+        title: Text('⚡${widget.model!.username}'),
         backgroundColor: kPrimaryColor,
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('messages').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  );
-                }
-                final messages = snapshot.data!.docs;
-                List<Text> messageWidgets = [];
-                for (var message in messages) {
-                  final messageText = message['message'];
-                  final messageSender = message['sender'];
-                  final messageWidget =
-                      Text('$messageText from $messageSender');
-                  messageWidgets.add(messageWidget);
-                }
-                return Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.all(16),
-                    children: messageWidgets,
-                  ),
-                );
-              },
+            SizedBox(
+              height: screenSize.height * .75,
+              width: screenSize.width,
+              child: StreamBuilder<dynamic>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection('chats')
+                    .doc(widget.model!.userId)
+                    .collection('messages')
+                    .orderBy('time', descending: false)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: Text('Fetching messages...'),
+                    );
+                  }
+                  if (snapshot.data.docs.length == 0) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 180,
+                          ),
+                          Icon(
+                            Icons.chat,
+                            color: Colors.grey.shade400,
+                            size: 75,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text('No messages')
+                        ],
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: (context, index) {
+                        MessageModel model = MessageModel.fromJson(
+                            snapshot.data!.docs[index].data()!
+                            as Map<String, dynamic>);
+                        return Container(
+                          height: 50,
+                          width: 200,
+                          margin: EdgeInsets.all(8),
+                          padding: EdgeInsets.all(16),
+                          // constraints:
+                          // BoxConstraints(maxWidth: screenSize.width * .6,),
+                          decoration: BoxDecoration(
+                            color: widget.model!.userId ==
+                                _auth.currentUser!.uid ?  Colors.green  : Colors.white,
+                            borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: Text(model.message!,
+                            textAlign: widget.model!.userId ==
+                                _auth.currentUser!.uid ? TextAlign.right : TextAlign.left,
+                            style: TextStyle(color:  widget.model!.userId ==
+                                _auth.currentUser!.uid ? Colors.white : Colors.black),),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
             Container(
               decoration: kMessageContainerDecoration,
@@ -117,20 +116,43 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
-                      onChanged: (value) {
-                        message = value;
-                      },
+                      controller: messageController,
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(primary: Colors.indigoAccent),
-                    onPressed: () {
-                      _firestore.collection("messages").add({
-                        'message': message!.trim(),
-                        'sender': loggedInUser!.email,
-                      });
-                      messagesStream();
+                    onPressed: () async {
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(_auth.currentUser!.uid)
+                          .collection('chats')
+                          .doc(widget.model!.userId)
+                          .collection('messages')
+                          .doc()
+                          .set({
+                        'message': messageController.text.trim(),
+                        'username': widget.model!.username,
+                        'useremail': widget.model!.useremail,
+                        'userphone': widget.model!.userphone,
+                        'userId': widget.model!.userId,
+                        'time': Timestamp.now(),
+                      }).whenComplete(() async {
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(widget.model!.userId)
+                            .collection('chats')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .collection('messages')
+                            .doc()
+                            .set({
+                          'message': messageController.text.trim(),
+                          'useremail':
+                          FirebaseAuth.instance.currentUser!.email,
+                          'userId': FirebaseAuth.instance.currentUser!.uid,
+                          'time': Timestamp.now(),
+                        });
+                      }).then((value) => messageController.clear());
                     },
                     child: const Text(
                       'Send',
